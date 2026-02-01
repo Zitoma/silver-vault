@@ -10,11 +10,32 @@
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#0a0a0f;--card:#14141c;--card2:#1a1a24;--text:#f5f5f7;--muted:#71717a;--border:rgba(255,255,255,0.1);--accent:#c9a227;--accent2:#e8a849;--success:#22c55e;--danger:#ef4444;--silver:#a8a8a8}
 body{font-family:-apple-system,BlinkMacSystemFont,Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:20px}
+
+/* LOCK SCREEN */
+.lock-screen{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+.lock-screen.hidden{display:none}
+.lock-icon{font-size:60px;margin-bottom:20px}
+.lock-title{font-size:20px;margin-bottom:8px}
+.lock-subtitle{font-size:14px;color:var(--muted);margin-bottom:30px}
+.pin-dots{display:flex;gap:16px;margin-bottom:30px}
+.pin-dot{width:16px;height:16px;border-radius:50%;border:2px solid var(--muted);transition:all 0.2s}
+.pin-dot.filled{background:var(--accent);border-color:var(--accent)}
+.pin-dot.error{border-color:var(--danger);background:var(--danger);animation:shake 0.3s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:280px}
+.pin-btn{width:70px;height:70px;border-radius:50%;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:28px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.1s}
+.pin-btn:active{background:var(--accent);color:var(--bg);transform:scale(0.95)}
+.pin-btn.empty{visibility:hidden}
+.pin-btn.del{font-size:20px}
+.lock-error{color:var(--danger);font-size:13px;margin-top:16px;height:20px}
+
 header{background:var(--card);padding:16px;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
 .header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .logo{display:flex;align-items:center;gap:10px}
 .logo-icon{width:40px;height:40px;background:linear-gradient(135deg,#d4d4d8,#71717a);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
 .logo h1{font-size:18px;background:linear-gradient(135deg,#d4d4d8,#71717a);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header-actions{display:flex;gap:8px;align-items:center}
+.btn-lock{background:none;border:none;font-size:20px;cursor:pointer;padding:8px}
 .price-box{background:var(--card2);padding:10px 16px;border-radius:20px;font-size:14px;display:flex;align-items:center;gap:10px;cursor:pointer}
 .price-box strong{color:var(--text);font-size:16px}
 .price-box span{color:var(--muted);font-size:12px}
@@ -70,8 +91,6 @@ main{padding:16px}
 .empty-state{text-align:center;padding:60px 20px;color:var(--muted)}
 .empty-state .icon{font-size:48px;margin-bottom:16px}
 .empty-state h3{color:var(--text);margin-bottom:8px}
-
-/* CHART */
 .chart-section{background:var(--card);border-radius:16px;padding:16px;margin-bottom:16px}
 .chart-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 .chart-header h3{font-size:14px;color:var(--muted)}
@@ -85,12 +104,8 @@ main{padding:16px}
 .chart-bar{width:100%;border-radius:3px 3px 0 0;min-height:2px;transition:height 0.3s}
 .chart-bar.metal{background:var(--silver)}
 .chart-bar.numis{background:var(--accent2)}
-.chart-bar-group:hover .chart-tooltip{display:block}
-.chart-tooltip{display:none;position:absolute;top:-5px;left:50%;transform:translateX(-50%);background:var(--card2);padding:4px 8px;border-radius:6px;font-size:9px;white-space:nowrap;z-index:10;border:1px solid var(--border)}
 .chart-labels{display:flex;justify-content:space-between;margin-top:8px;font-size:10px;color:var(--muted)}
 .chart-empty{text-align:center;color:var(--muted);padding:30px;font-size:13px}
-
-/* MODALS */
 .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:1000;align-items:center;justify-content:center;padding:16px}
 .modal.active{display:flex}
 .modal-content{background:var(--card);border-radius:20px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto}
@@ -114,6 +129,7 @@ main{padding:16px}
 .modal-footer{display:flex;gap:12px;padding:20px;border-top:1px solid var(--border)}
 .btn-cancel{flex:1;padding:16px;background:var(--card2);border:1px solid var(--border);border-radius:12px;color:var(--text);cursor:pointer;font-size:16px}
 .btn-save{flex:1;padding:16px;background:var(--accent);border:none;border-radius:12px;color:var(--bg);font-weight:700;cursor:pointer;font-size:16px}
+.btn-danger{background:var(--danger)}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
 .photo-section{margin-bottom:16px}
 .photo-preview{width:100%;height:100px;background:var(--card2);border:2px dashed var(--border);border-radius:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden}
@@ -121,8 +137,6 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
 .photo-preview .placeholder{text-align:center;color:var(--muted)}
 .photo-preview .placeholder span{font-size:28px;display:block}
 #photoInput,#photoInput2{display:none}
-
-/* DETAIL VIEW */
 .detail-view{display:none;position:fixed;inset:0;background:var(--bg);z-index:1001;overflow-y:auto}
 .detail-view.active{display:block}
 .detail-header{display:flex;align-items:center;justify-content:space-between;padding:16px;background:var(--card);position:sticky;top:0;z-index:10}
@@ -163,20 +177,58 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
 .detail-actions button{flex:1;padding:16px;border-radius:12px;font-size:16px;cursor:pointer;border:none}
 .btn-edit{background:var(--card2);color:var(--text)}
 .btn-delete{background:rgba(239,68,68,0.15);color:var(--danger)}
-
-/* IMPORT */
 .import-zone{border:2px dashed var(--border);border-radius:12px;padding:30px;text-align:center;color:var(--muted);cursor:pointer;margin-bottom:16px}
 .import-zone:hover{border-color:var(--accent);color:var(--text)}
 #csvInput{display:none}
+
+/* SETTINGS */
+.settings-item{background:var(--card2);border-radius:12px;padding:16px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.settings-item .info h4{font-size:15px;margin-bottom:4px}
+.settings-item .info p{font-size:12px;color:var(--muted)}
+.settings-item button{padding:10px 16px;border-radius:8px;border:none;cursor:pointer;font-size:13px}
+.settings-item .btn-on{background:var(--success);color:#fff}
+.settings-item .btn-off{background:var(--card);color:var(--text);border:1px solid var(--border)}
 </style>
 </head>
 <body>
+
+<!-- LOCK SCREEN -->
+<div class="lock-screen" id="lockScreen">
+<div class="lock-icon">🔒</div>
+<div class="lock-title">Silver Vault</div>
+<div class="lock-subtitle" id="lockSubtitle">Entrez votre code PIN</div>
+<div class="pin-dots">
+<div class="pin-dot" id="dot0"></div>
+<div class="pin-dot" id="dot1"></div>
+<div class="pin-dot" id="dot2"></div>
+<div class="pin-dot" id="dot3"></div>
+</div>
+<div class="pin-pad">
+<button class="pin-btn" onclick="pinInput('1')">1</button>
+<button class="pin-btn" onclick="pinInput('2')">2</button>
+<button class="pin-btn" onclick="pinInput('3')">3</button>
+<button class="pin-btn" onclick="pinInput('4')">4</button>
+<button class="pin-btn" onclick="pinInput('5')">5</button>
+<button class="pin-btn" onclick="pinInput('6')">6</button>
+<button class="pin-btn" onclick="pinInput('7')">7</button>
+<button class="pin-btn" onclick="pinInput('8')">8</button>
+<button class="pin-btn" onclick="pinInput('9')">9</button>
+<button class="pin-btn empty"></button>
+<button class="pin-btn" onclick="pinInput('0')">0</button>
+<button class="pin-btn del" onclick="pinDelete()">⌫</button>
+</div>
+<div class="lock-error" id="lockError"></div>
+</div>
+
 <header>
 <div class="header-top">
 <div class="logo"><div class="logo-icon">🪙</div><h1>Silver Vault</h1></div>
+<div class="header-actions">
+<button class="btn-lock" onclick="openSettings()" title="Paramètres">⚙️</button>
 <div class="price-box" onclick="togglePriceEdit()">
 <strong id="priceDisplay">3.12€</strong><span>/g</span>
 <button class="btn-refresh" id="btnRefresh" onclick="event.stopPropagation();fetchPrice()">🔄</button>
+</div>
 </div>
 </div>
 <div class="stats-bar">
@@ -213,7 +265,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
 </div>
 <div class="chart-section">
 <div class="chart-header">
-<h3>📈 Évolution de la collection</h3>
+<h3>📈 Évolution</h3>
 <div class="chart-legend">
 <span><div class="dot metal"></div>Métal</span>
 <span><div class="dot numis"></div>Numis.</span>
@@ -239,6 +291,59 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
 <div class="detail-actions">
 <button class="btn-edit" onclick="editCurrent()">✏️ Modifier</button>
 <button class="btn-delete" onclick="deleteCurrent()">🗑️ Supprimer</button>
+</div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal" id="settingsModal">
+<div class="modal-content">
+<div class="modal-header"><h2>⚙️ Paramètres</h2><button class="btn-close" onclick="closeSettings()">✕</button></div>
+<div class="modal-body">
+<div class="settings-item">
+<div class="info">
+<h4>🔒 Code PIN</h4>
+<p id="pinStatus">Non configuré</p>
+</div>
+<button id="pinToggleBtn" class="btn-off" onclick="togglePin()">Activer</button>
+</div>
+<div class="settings-item" id="changePinItem" style="display:none">
+<div class="info">
+<h4>🔑 Changer le PIN</h4>
+<p>Modifier votre code</p>
+</div>
+<button class="btn-off" onclick="changePin()">Changer</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- PIN SETUP MODAL -->
+<div class="modal" id="pinSetupModal">
+<div class="modal-content" style="max-width:350px">
+<div class="modal-header"><h2 id="pinSetupTitle">Créer un PIN</h2><button class="btn-close" onclick="closePinSetup()">✕</button></div>
+<div class="modal-body" style="text-align:center;padding:30px">
+<p id="pinSetupText" style="color:var(--muted);margin-bottom:20px">Entrez un code à 4 chiffres</p>
+<div class="pin-dots" style="justify-content:center">
+<div class="pin-dot" id="sdot0"></div>
+<div class="pin-dot" id="sdot1"></div>
+<div class="pin-dot" id="sdot2"></div>
+<div class="pin-dot" id="sdot3"></div>
+</div>
+<div class="pin-pad" style="margin:20px auto">
+<button class="pin-btn" onclick="setupPinInput('1')">1</button>
+<button class="pin-btn" onclick="setupPinInput('2')">2</button>
+<button class="pin-btn" onclick="setupPinInput('3')">3</button>
+<button class="pin-btn" onclick="setupPinInput('4')">4</button>
+<button class="pin-btn" onclick="setupPinInput('5')">5</button>
+<button class="pin-btn" onclick="setupPinInput('6')">6</button>
+<button class="pin-btn" onclick="setupPinInput('7')">7</button>
+<button class="pin-btn" onclick="setupPinInput('8')">8</button>
+<button class="pin-btn" onclick="setupPinInput('9')">9</button>
+<button class="pin-btn empty"></button>
+<button class="pin-btn" onclick="setupPinInput('0')">0</button>
+<button class="pin-btn del" onclick="setupPinDelete()">⌫</button>
+</div>
+</div>
 </div>
 </div>
 
@@ -316,7 +421,6 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
 <div class="import-zone" onclick="document.getElementById('csvInput').click()">
 <div style="font-size:40px;margin-bottom:10px">📄</div>
 <div>Appuyez pour sélectionner un fichier CSV</div>
-<div style="font-size:12px;margin-top:8px">Format: Nom;Pays;Année;Poids;Titre;...</div>
 </div>
 <div id="importPreview"></div>
 </div>
@@ -340,13 +444,146 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
 </div>
 
 <script>
-var coins=[],price=3.12,OZ=31.1035,KEY="silver_vault_coins",HKEY="silver_vault_history";
+var coins=[],price=3.12,OZ=31.1035,KEY="silver_vault_coins",HKEY="silver_vault_history",PKEY="silver_vault_pin";
 var photo1=null,photo2=null,viewId=null,viewTab="data",sortBy="date",importData=[];
+var enteredPin="",setupPin="",setupStep=0,isChangingPin=false;
 
 var FLAGS={"france":"🇫🇷","suisse":"🇨🇭","switzerland":"🇨🇭","usa":"🇺🇸","etats-unis":"🇺🇸","états-unis":"🇺🇸","united states":"🇺🇸","allemagne":"🇩🇪","germany":"🇩🇪","belgique":"🇧🇪","belgium":"🇧🇪","italie":"🇮🇹","italy":"🇮🇹","espagne":"🇪🇸","spain":"🇪🇸","royaume-uni":"🇬🇧","uk":"🇬🇧","united kingdom":"🇬🇧","angleterre":"🇬🇧","canada":"🇨🇦","australie":"🇦🇺","australia":"🇦🇺","autriche":"🇦🇹","austria":"🇦🇹","pays-bas":"🇳🇱","netherlands":"🇳🇱","portugal":"🇵🇹","grece":"🇬🇷","greece":"🇬🇷","mexique":"🇲🇽","mexico":"🇲🇽","chine":"🇨🇳","china":"🇨🇳","japon":"🇯🇵","japan":"🇯🇵","russie":"🇷🇺","russia":"🇷🇺","afrique":"🌍","chad":"🇹🇩","tchad":"🇹🇩","congo":"🇨🇬","cameroun":"🇨🇲","gabon":"🇬🇦","pologne":"🇵🇱","poland":"🇵🇱"};
 
 function getFlag(country){if(!country)return"";return FLAGS[country.toLowerCase().trim()]||""}
 
+// PIN SYSTEM
+function hashPin(pin){var h=0;for(var i=0;i<pin.length;i++){h=((h<<5)-h)+pin.charCodeAt(i);h=h&h}return h.toString()}
+function hasPin(){return localStorage.getItem(PKEY)!==null}
+function checkPin(pin){return hashPin(pin)===localStorage.getItem(PKEY)}
+function savePin(pin){localStorage.setItem(PKEY,hashPin(pin))}
+function removePin(){localStorage.removeItem(PKEY)}
+
+function updatePinDots(prefix,len){
+  for(var i=0;i<4;i++){
+    var dot=document.getElementById(prefix+i);
+    dot.classList.toggle("filled",i<len);
+    dot.classList.remove("error");
+  }
+}
+
+function showPinError(){
+  for(var i=0;i<4;i++)document.getElementById("dot"+i).classList.add("error");
+  document.getElementById("lockError").textContent="Code incorrect";
+  setTimeout(function(){
+    enteredPin="";
+    updatePinDots("dot",0);
+    document.getElementById("lockError").textContent="";
+  },500);
+}
+
+function pinInput(n){
+  if(enteredPin.length>=4)return;
+  enteredPin+=n;
+  updatePinDots("dot",enteredPin.length);
+  if(enteredPin.length===4){
+    setTimeout(function(){
+      if(checkPin(enteredPin)){
+        document.getElementById("lockScreen").classList.add("hidden");
+      }else{
+        showPinError();
+      }
+    },200);
+  }
+}
+
+function pinDelete(){
+  if(enteredPin.length>0){
+    enteredPin=enteredPin.slice(0,-1);
+    updatePinDots("dot",enteredPin.length);
+  }
+}
+
+function initLock(){
+  if(hasPin()){
+    document.getElementById("lockScreen").classList.remove("hidden");
+  }else{
+    document.getElementById("lockScreen").classList.add("hidden");
+  }
+}
+
+// SETTINGS
+function openSettings(){
+  document.getElementById("settingsModal").classList.add("active");
+  updateSettingsUI();
+}
+function closeSettings(){document.getElementById("settingsModal").classList.remove("active")}
+
+function updateSettingsUI(){
+  var has=hasPin();
+  document.getElementById("pinStatus").textContent=has?"Activé ✓":"Non configuré";
+  document.getElementById("pinToggleBtn").textContent=has?"Désactiver":"Activer";
+  document.getElementById("pinToggleBtn").className=has?"btn-on":"btn-off";
+  document.getElementById("changePinItem").style.display=has?"flex":"none";
+}
+
+function togglePin(){
+  if(hasPin()){
+    removePin();
+    updateSettingsUI();
+  }else{
+    isChangingPin=false;
+    openPinSetup();
+  }
+}
+
+function changePin(){
+  isChangingPin=true;
+  openPinSetup();
+}
+
+function openPinSetup(){
+  setupPin="";setupStep=0;
+  document.getElementById("pinSetupTitle").textContent=isChangingPin?"Changer le PIN":"Créer un PIN";
+  document.getElementById("pinSetupText").textContent="Entrez un code à 4 chiffres";
+  updatePinDots("sdot",0);
+  document.getElementById("pinSetupModal").classList.add("active");
+}
+
+function closePinSetup(){document.getElementById("pinSetupModal").classList.remove("active")}
+
+function setupPinInput(n){
+  if(setupPin.length>=4)return;
+  setupPin+=n;
+  updatePinDots("sdot",setupPin.length);
+  if(setupPin.length===4){
+    setTimeout(function(){
+      if(setupStep===0){
+        setupStep=1;
+        var firstPin=setupPin;
+        setupPin="";
+        updatePinDots("sdot",0);
+        document.getElementById("pinSetupText").textContent="Confirmez le code";
+        setupPin="";
+        window.tempPin=firstPin;
+      }else{
+        if(setupPin===window.tempPin){
+          savePin(setupPin);
+          closePinSetup();
+          updateSettingsUI();
+        }else{
+          document.getElementById("pinSetupText").textContent="Les codes ne correspondent pas. Réessayez.";
+          setupPin="";setupStep=0;
+          updatePinDots("sdot",0);
+        }
+      }
+    },200);
+  }
+}
+
+function setupPinDelete(){
+  if(setupPin.length>0){
+    setupPin=setupPin.slice(0,-1);
+    updatePinDots("sdot",setupPin.length);
+  }
+}
+
+// DATA
 function load(){
   var k=["silver_vault_coins","sv2_coins","sv_coins"];
   for(var i=0;i<k.length;i++){try{var d=localStorage.getItem(k[i]);if(d){var p=JSON.parse(d);if(Array.isArray(p)&&p.length>0){coins=p;break}}}catch(e){}}
@@ -361,28 +598,22 @@ function calcTotals(){
   for(var i=0;i<coins.length;i++){
     var c=coins[i],qty=c.qty||1;
     var p=pure(c.weight||0,c.purity||999)*qty;
-    var metal=val(p);
-    var numis=c.premium?c.premium*qty:0;
-    metalTotal+=metal;
-    numisTotal+=numis;
+    metalTotal+=val(p);
+    numisTotal+=c.premium?c.premium*qty:0;
     pureTotal+=p;
     count+=qty;
   }
-  return{metal:metalTotal,numis:numisTotal,pure:pureTotal,count:count,total:numisTotal>0?numisTotal:metalTotal};
+  return{metal:metalTotal,numis:numisTotal,pure:pureTotal,count:count};
 }
 
 function saveHistory(){
   try{
     var h=JSON.parse(localStorage.getItem(HKEY)||"[]");
     var today=new Date().toISOString().split("T")[0];
-    var totals=calcTotals();
-    var entry={date:today,metal:Math.round(totals.metal*100)/100,numis:Math.round(totals.numis*100)/100};
-    if(h.length===0||h[h.length-1].date!==today){
-      h.push(entry);
-      if(h.length>30)h=h.slice(-30);
-    }else{
-      h[h.length-1]=entry;
-    }
+    var t=calcTotals();
+    var entry={date:today,metal:Math.round(t.metal*100)/100,numis:Math.round(t.numis*100)/100};
+    if(h.length===0||h[h.length-1].date!==today){h.push(entry);if(h.length>30)h=h.slice(-30)}
+    else h[h.length-1]=entry;
     localStorage.setItem(HKEY,JSON.stringify(h));
   }catch(e){}
 }
@@ -410,12 +641,7 @@ function updateStats(){
 
 function getCoin(id){for(var i=0;i<coins.length;i++)if(coins[i].id===id)return coins[i];return null}
 
-function setSort(s){
-  sortBy=s;
-  document.querySelectorAll(".sort-btn").forEach(function(b){b.classList.remove("active")});
-  event.target.classList.add("active");
-  render();
-}
+function setSort(s){sortBy=s;document.querySelectorAll(".sort-btn").forEach(function(b){b.classList.remove("active")});event.target.classList.add("active");render()}
 
 function sortCoins(arr){
   var sorted=arr.slice();
@@ -436,26 +662,19 @@ function sortCoins(arr){
 function renderChart(){
   var h=getHistory();
   var container=document.getElementById("chartContainer");
-  if(h.length<2){
-    container.innerHTML="<div class='chart-empty'>Ajoutez des pièces pour voir l'évolution</div>";
-    return;
-  }
+  if(h.length<2){container.innerHTML="<div class='chart-empty'>Ajoutez des pièces pour voir l'évolution</div>";return}
   var maxM=Math.max.apply(null,h.map(function(x){return x.metal||0}));
   var maxN=Math.max.apply(null,h.map(function(x){return x.numis||0}));
   var max=Math.max(maxM,maxN,1);
-  
   var bars="";
   for(var i=0;i<h.length;i++){
     var pctM=max>0?((h[i].metal||0)/max)*100:0;
     var pctN=max>0?((h[i].numis||0)/max)*100:0;
-    var tooltip=h[i].date.slice(5)+"<br>Métal: "+fmt(h[i].metal||0)+(h[i].numis?"<br>Numis: "+fmt(h[i].numis):"");
     bars+="<div class='chart-bar-group'>";
     if(h[i].numis>0)bars+="<div class='chart-bar numis' style='height:"+pctN+"%'></div>";
-    bars+="<div class='chart-bar metal' style='height:"+pctM+"%'></div>";
-    bars+="<div class='chart-tooltip'>"+tooltip+"</div></div>";
+    bars+="<div class='chart-bar metal' style='height:"+pctM+"%'></div></div>";
   }
-  var labels="<span>"+h[0].date.slice(5)+"</span><span>"+h[h.length-1].date.slice(5)+"</span>";
-  container.innerHTML="<div class='chart-container'>"+bars+"</div><div class='chart-labels'>"+labels+"</div>";
+  container.innerHTML="<div class='chart-container'>"+bars+"</div><div class='chart-labels'><span>"+h[0].date.slice(5)+"</span><span>"+h[h.length-1].date.slice(5)+"</span></div>";
 }
 
 function render(){
@@ -463,7 +682,7 @@ function render(){
   var q=document.getElementById("searchInput").value.toLowerCase(),list=document.getElementById("list"),f=[];
   for(var i=0;i<coins.length;i++){var c=coins[i];if(!q||(c.name&&c.name.toLowerCase().indexOf(q)>=0)||(c.country&&c.country.toLowerCase().indexOf(q)>=0))f.push(c)}
   f=sortCoins(f);
-  if(!f.length){list.innerHTML="<div class='empty-state'><div class='icon'>🪙</div><h3>"+(coins.length?"Aucun résultat":"Collection vide")+"</h3><p>"+(coins.length?"Modifiez la recherche":"Appuyez sur + pour ajouter")+"</p></div>";return}
+  if(!f.length){list.innerHTML="<div class='empty-state'><div class='icon'>🪙</div><h3>"+(coins.length?"Aucun résultat":"Collection vide")+"</h3><p>"+(coins.length?"":"Appuyez sur + pour ajouter")+"</p></div>";return}
   var html="";
   for(var i=0;i<f.length;i++){
     var c=f[i],qty=c.qty||1,p=pure(c.weight||0,c.purity||999)*qty,metalV=val(p);
@@ -474,14 +693,11 @@ function render(){
     var ic=c.photo?"<img src='"+c.photo+"'>":"🏛️";
     var flag=getFlag(c.country);
     var qtyBadge=qty>1?"<span class='coin-qty'>x"+qty+"</span>":"";
-    var metalLine="<div class='metal'>Métal: "+fmt(metalV)+"</div>";
-    var numisLine=numisV>0?"<div class='premium'>Numis: "+fmt(numisV)+"</div>":"";
-    html+="<div class='coin-card' onclick=\"openDetail('"+c.id+"')\"><div class='coin-header'><div class='coin-icon'>"+ic+qtyBadge+"</div><div class='coin-info'><h3>"+(flag?"<span class='flag'>"+flag+"</span>":"")+(c.name||"?")+"</h3><div class='coin-meta'>"+(c.country?"<span>"+c.country+"</span>":"")+(c.year?"<span>"+c.year+"</span>":"")+"<span class='purity-badge'>."+(c.purity||999)+"</span></div></div><div class='coin-value'><div class='main'>"+fmt(displayVal)+"</div>"+metalLine+numisLine+(gp!==null?"<div class='change "+(g>=0?"up":"down")+"'>"+(g>=0?"▲":"▼")+" "+gp+"%</div>":"")+"</div></div><div class='coin-details'><div><span>Poids total</span><br><strong>"+fmtW((c.weight||0)*qty)+"</strong></div><div><span>Argent pur</span><br><strong>"+fmtW(p)+"</strong></div><div><span>Achat</span><br><strong>"+(c.purchasePrice?fmt(c.purchasePrice):"-")+"</strong></div></div></div>"
+    html+="<div class='coin-card' onclick=\"openDetail('"+c.id+"')\"><div class='coin-header'><div class='coin-icon'>"+ic+qtyBadge+"</div><div class='coin-info'><h3>"+(flag?"<span class='flag'>"+flag+"</span>":"")+(c.name||"?")+"</h3><div class='coin-meta'>"+(c.country?"<span>"+c.country+"</span>":"")+(c.year?"<span>"+c.year+"</span>":"")+"<span class='purity-badge'>."+(c.purity||999)+"</span></div></div><div class='coin-value'><div class='main'>"+fmt(displayVal)+"</div><div class='metal'>Métal: "+fmt(metalV)+"</div>"+(numisV>0?"<div class='premium'>Numis: "+fmt(numisV)+"</div>":"")+(gp!==null?"<div class='change "+(g>=0?"up":"down")+"'>"+(g>=0?"▲":"▼")+" "+gp+"%</div>":"")+"</div></div><div class='coin-details'><div><span>Poids</span><br><strong>"+fmtW((c.weight||0)*qty)+"</strong></div><div><span>Pur</span><br><strong>"+fmtW(p)+"</strong></div><div><span>Achat</span><br><strong>"+(c.purchasePrice?fmt(c.purchasePrice):"-")+"</strong></div></div></div>"
   }
   list.innerHTML=html
 }
 
-// DETAIL VIEW
 function openDetail(id){
   viewId=id;viewTab="data";
   var c=getCoin(id);if(!c)return;
@@ -506,32 +722,13 @@ function renderDetail(){
   var g=c.purchasePrice?displayVal-c.purchasePrice:null,gp=c.purchasePrice?((g/c.purchasePrice)*100).toFixed(1):null;
   var flag=getFlag(c.country);
   var h="<div class='detail-title'>"+(flag?"<span class='flag'>"+flag+"</span>":"")+c.name+(qty>1?" <span style='color:var(--muted)'>(x"+qty+")</span>":"")+"</div><div class='detail-year'>"+(c.year||"")+"</div>";
-  
   if(viewTab==="data"){
-    h+="<div class='detail-section'><h3>💰 Valeurs</h3><div class='detail-price-box'>";
-    h+="<div class='detail-price-item'><div class='label'>Valeur métal</div><div class='value silver'>"+fmt(metalV)+"</div></div>";
-    h+="<div class='detail-price-item'><div class='label'>Valeur numismatique</div><div class='value gold'>"+(numisV>0?fmt(numisV):"—")+"</div></div></div></div>";
-    
-    if(numisV>0){
-      h+="<div class='detail-section'><h3>⭐ Prime numismatique</h3>";
-      h+="<div class='detail-row'><span class='label'>Prime vs métal</span><span class='value premium'>+"+(((numisV/metalV)-1)*100).toFixed(0)+"%</span></div></div>";
-    }
-    
-    h+="<div class='detail-section'><h3>📊 Performance</h3>";
-    h+="<div class='detail-row'><span class='label'>Prix d'achat</span><span class='value'>"+(c.purchasePrice?fmt(c.purchasePrice):"—")+"</span></div>";
-    h+="<div class='detail-row'><span class='label'>Gain/Perte</span><span class='value "+(g>=0?"up":"down")+"'>"+(gp!==null?(g>=0?"+":"")+ gp+"% ("+fmt(g)+")":"—")+"</span></div>";
-    h+="<div class='detail-row'><span class='label'>Date d'achat</span><span class='value'>"+(c.purchaseDate||"—")+"</span></div></div>";
-    
+    h+="<div class='detail-section'><h3>💰 Valeurs</h3><div class='detail-price-box'><div class='detail-price-item'><div class='label'>Valeur métal</div><div class='value silver'>"+fmt(metalV)+"</div></div><div class='detail-price-item'><div class='label'>Valeur numismatique</div><div class='value gold'>"+(numisV>0?fmt(numisV):"—")+"</div></div></div></div>";
+    if(numisV>0)h+="<div class='detail-section'><h3>⭐ Prime</h3><div class='detail-row'><span class='label'>Prime vs métal</span><span class='value premium'>+"+(((numisV/metalV)-1)*100).toFixed(0)+"%</span></div></div>";
+    h+="<div class='detail-section'><h3>📊 Performance</h3><div class='detail-row'><span class='label'>Prix d'achat</span><span class='value'>"+(c.purchasePrice?fmt(c.purchasePrice):"—")+"</span></div><div class='detail-row'><span class='label'>Gain/Perte</span><span class='value "+(g>=0?"up":"down")+"'>"+(gp!==null?(g>=0?"+":"")+gp+"%":"—")+"</span></div><div class='detail-row'><span class='label'>Date</span><span class='value'>"+(c.purchaseDate||"—")+"</span></div></div>";
     if(c.notes)h+="<div class='detail-section'><h3>📝 Notes</h3><div class='detail-notes'>"+c.notes+"</div></div>";
   }else{
-    h+="<div class='detail-section'><h3>📋 Caractéristiques</h3>";
-    h+="<div class='detail-row'><span class='label'>Pays</span><span class='value'>"+(flag?flag+" ":"")+(c.country||"—")+"</span></div>";
-    h+="<div class='detail-row'><span class='label'>Année</span><span class='value'>"+(c.year||"—")+"</span></div>";
-    h+="<div class='detail-row'><span class='label'>Quantité</span><span class='value'>"+qty+"</span></div>";
-    h+="<div class='detail-row'><span class='label'>Poids unitaire</span><span class='value'>"+fmtW(c.weight||0)+"</span></div>";
-    h+="<div class='detail-row'><span class='label'>Poids total</span><span class='value'>"+fmtW((c.weight||0)*qty)+"</span></div>";
-    h+="<div class='detail-row'><span class='label'>Titre</span><span class='value'>."+(c.purity||999)+"</span></div>";
-    h+="<div class='detail-row'><span class='label'>Argent pur total</span><span class='value'>"+fmtW(p)+"</span></div></div>";
+    h+="<div class='detail-section'><h3>📋 Caractéristiques</h3><div class='detail-row'><span class='label'>Pays</span><span class='value'>"+(flag?flag+" ":"")+(c.country||"—")+"</span></div><div class='detail-row'><span class='label'>Année</span><span class='value'>"+(c.year||"—")+"</span></div><div class='detail-row'><span class='label'>Quantité</span><span class='value'>"+qty+"</span></div><div class='detail-row'><span class='label'>Poids unitaire</span><span class='value'>"+fmtW(c.weight||0)+"</span></div><div class='detail-row'><span class='label'>Poids total</span><span class='value'>"+fmtW((c.weight||0)*qty)+"</span></div><div class='detail-row'><span class='label'>Titre</span><span class='value'>."+(c.purity||999)+"</span></div><div class='detail-row'><span class='label'>Argent pur</span><span class='value'>"+fmtW(p)+"</span></div></div>";
   }
   document.getElementById("detailContent").innerHTML=h;
 }
@@ -539,7 +736,6 @@ function renderDetail(){
 function editCurrent(){var id=viewId;closeDetail();openForm(id)}
 function deleteCurrent(){document.getElementById("delId").value=viewId;document.getElementById("delModal").classList.add("active")}
 
-// FORM
 function handlePhoto(e,n){
   var f=e.target.files[0];if(!f)return;
   var r=new FileReader();
@@ -570,11 +766,10 @@ function calcPreview(){
   var pu=pure(w,getPurity())*qty;
   var metal=val(pu);
   var prem=parseFloat(document.getElementById("fPremium").value)||0;
-  var total=prem>0?prem:metal;
   document.getElementById("prevPure").textContent=fmtW(pu);
   document.getElementById("prevMetal").textContent=fmt(metal);
   document.getElementById("prevPremium").textContent=prem>0?fmt(prem):"—";
-  document.getElementById("prevValue").textContent=fmt(total);
+  document.getElementById("prevValue").textContent=fmt(prem>0?prem:metal);
 }
 
 function openForm(id){
@@ -582,7 +777,6 @@ function openForm(id){
   document.getElementById("formTitle").textContent=id?"Modifier":"Ajouter";
   document.getElementById("customPurityGroup").style.display="none";
   resetForm();
-  
   var c=id?getCoin(id):null;
   document.getElementById("fId").value=c?c.id:"";
   document.getElementById("fName").value=c?c.name||"":"";
@@ -594,10 +788,8 @@ function openForm(id){
   document.getElementById("fPremium").value=c?c.premium||"":"";
   document.getElementById("fDate").value=c?c.purchaseDate||"":"";
   document.getElementById("fNotes").value=c?c.notes||"":"";
-  
   if(c&&c.photo){photo1=c.photo;document.getElementById("ph1").style.display="none";document.getElementById("img1").src=c.photo;document.getElementById("img1").style.display="block"}
   if(c&&c.photo2){photo2=c.photo2;document.getElementById("ph2").style.display="none";document.getElementById("img2").src=c.photo2;document.getElementById("img2").style.display="block"}
-  
   var pu=c?c.purity||999:999,sel=document.getElementById("fPurity"),found=false;
   for(var i=0;i<sel.options.length;i++)if(sel.options[i].value===pu.toString()){found=true;break}
   if(found)sel.value=pu.toString();else{sel.value="custom";document.getElementById("customPurityGroup").style.display="block";document.getElementById("fCustomPurity").value=pu}
@@ -609,27 +801,13 @@ function save(){
   var n=document.getElementById("fName").value.trim(),w=parseFloat(document.getElementById("fWeight").value);
   if(!n){alert("Nom requis");return}
   if(!w||w<=0){alert("Poids invalide");return}
-  var d={
-    name:n,
-    country:document.getElementById("fCountry").value.trim(),
-    year:parseInt(document.getElementById("fYear").value)||null,
-    qty:parseInt(document.getElementById("fQty").value)||1,
-    weight:w,
-    purity:getPurity(),
-    purchasePrice:parseFloat(document.getElementById("fPrice").value)||null,
-    premium:parseFloat(document.getElementById("fPremium").value)||null,
-    purchaseDate:document.getElementById("fDate").value||null,
-    notes:document.getElementById("fNotes").value.trim(),
-    photo:photo1,
-    photo2:photo2
-  };
+  var d={name:n,country:document.getElementById("fCountry").value.trim(),year:parseInt(document.getElementById("fYear").value)||null,qty:parseInt(document.getElementById("fQty").value)||1,weight:w,purity:getPurity(),purchasePrice:parseFloat(document.getElementById("fPrice").value)||null,premium:parseFloat(document.getElementById("fPremium").value)||null,purchaseDate:document.getElementById("fDate").value||null,notes:document.getElementById("fNotes").value.trim(),photo:photo1,photo2:photo2};
   var id=document.getElementById("fId").value;
   if(id){for(var i=0;i<coins.length;i++)if(coins[i].id===id){for(var k in d)coins[i][k]=d[k];break}}
   else{d.id="c"+Date.now();coins.push(d)}
   saveCoins();updateStats();render();closeForm();
 }
 
-// IMPORT/EXPORT
 function openImport(){document.getElementById("importModal").classList.add("active");document.getElementById("importPreview").innerHTML="";document.getElementById("btnImport").style.display="none";importData=[]}
 function closeImport(){document.getElementById("importModal").classList.remove("active");document.getElementById("csvInput").value=""}
 
@@ -642,20 +820,11 @@ function handleCSV(e){
     for(var i=1;i<lines.length;i++){
       var cols=lines[i].split(";");
       if(cols.length>=4&&cols[0].trim()){
-        importData.push({
-          name:cols[0].trim(),
-          country:cols[1]?cols[1].trim():"",
-          year:parseInt(cols[2])||null,
-          weight:parseFloat(cols[3])||0,
-          purity:parseInt(cols[4])||999,
-          qty:parseInt(cols[5])||1,
-          purchasePrice:parseFloat(cols[8])||null,
-          premium:parseFloat(cols[9])||null
-        });
+        importData.push({name:cols[0].trim(),country:cols[1]?cols[1].trim():"",year:parseInt(cols[2])||null,weight:parseFloat(cols[3])||0,purity:parseInt(cols[4])||999,qty:parseInt(cols[5])||1,purchasePrice:parseFloat(cols[8])||null,premium:parseFloat(cols[9])||null});
       }
     }
     if(importData.length>0){
-      document.getElementById("importPreview").innerHTML="<div style='color:var(--success);margin-bottom:10px'>✓ "+importData.length+" pièces trouvées</div><div style='font-size:12px;color:var(--muted);max-height:150px;overflow:auto'>"+importData.map(function(c){return c.name}).join("<br>")+"</div>";
+      document.getElementById("importPreview").innerHTML="<div style='color:var(--success)'>✓ "+importData.length+" pièces</div>";
       document.getElementById("btnImport").style.display="block";
     }else{
       document.getElementById("importPreview").innerHTML="<div style='color:var(--danger)'>Aucune pièce trouvée</div>";
@@ -667,7 +836,6 @@ function handleCSV(e){
 function confirmImport(){
   for(var i=0;i<importData.length;i++){importData[i].id="c"+Date.now()+i;coins.push(importData[i])}
   saveCoins();updateStats();render();closeImport();
-  alert(importData.length+" pièces importées !");
 }
 
 function closeDel(){document.getElementById("delModal").classList.remove("active")}
@@ -686,7 +854,7 @@ function exportCSV(){
   a.click();
 }
 
-load();updatePriceUI();updateStats();render();fetchPrice();
+load();initLock();updatePriceUI();updateStats();render();fetchPrice();
 </script>
 </body>
 </html>
